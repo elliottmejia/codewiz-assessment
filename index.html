@@ -4,7 +4,7 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <![endif]-->
 <html>
 
 <head>
@@ -15,29 +15,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         :root {
-            background: black;
+            background: #000000;
             color: white;
+            --shape-height: 100px;
         }
-
         .square,
-        .rectangle,
         .circle {
-            width: 100px;
-            height: 100px;
+            width: var(--shape-height);
+            height: var(--shape-height);
         }
-
         .square {
-            width: 100px;
-            height: 100px;
             background-color: gray;
         }
-
         .rectangle {
             width: 150px;
-            height: 100px;
+            height: var(--shape-height);
             background-color: gray;
         }
-
         .triangle {
             width: 0;
             height: 0;
@@ -45,54 +39,30 @@
             border-right: 50px solid transparent;
             border-bottom: 87px solid gray;
         }
-
         .circle {
-            width: 100px;
-            height: 100px;
             background-color: gray;
             border-radius: 50%;
         }
-
         .triangle.odd {
             border-bottom: 87px solid red;
         }
-
         .triangle.even {
             border-bottom: 87px solid green;
         }
-
-        .circle {
-            background-color: gray;
-            border-radius: 50%;
-        }
-
         .odd:not(.triangle) {
             background-color: red;
         }
-
         .even:not(.triangle) {
             background-color: green;
         }
-
         .error {
             color: red;
         }
     </style>
-    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings:
-                'FILL' 0,
-                'wght' 400,
-                'GRAD' 0,
-                'opsz' 24
-        }
-    </style>
 </head>
 
 <body>
@@ -107,7 +77,6 @@ const App = () => {
     const [hideBlanks, setHideBlanks] = React.useState(false); // : Boolean; If true, the form will hide numbers that don't correspond to a shape.
 
 
-
     const handleAutoSubmit = () => {
         if (!autoSubmit){
             handleSubmit();
@@ -116,20 +85,22 @@ const App = () => {
         setAutoSubmit(!autoSubmit);
     }
 
-    const handleHideBadNums = () => {
+    const handleHideBlanks = () => {
         setHideBlanks(!hideBlanks);
         if (inputParsed.length) handleSubmit();
     }
 
     React.useEffect(() => {
-        // This useEffect will be triggered whenever inputParsed changes.
+    // This useEffect will be triggered whenever inputParsed changes and submits the form.
         if (inputParsed === undefined) {
             return;
         }
 
-        if (autoSubmit) handleSubmit();
+        if (autoSubmit){
+            handleSubmit();
+            scrollDown();
+        } 
 
-       scrollDown();
 
     }, [inputParsed]);
 
@@ -168,15 +139,15 @@ const App = () => {
             if (n < 10 && n % 2 != 0) {
                 return "triangle";
                 // console.log("triangle")
-            } else if (isPrime(n)) {
-                return "circle";
-            // console.log("circle")
             } else if (n % 2 === 0) {
                 return "square"
             // console.log("square")
             } else if (n % 3 === 0) {
                 return "rectangle"
             // console.log("rectangle")
+            } else if (isPrime(n)) {
+                return "circle";
+            // console.log("circle")
             } else {
                 return "none"
                 // console.log(n + ` none`)
@@ -185,18 +156,19 @@ const App = () => {
     }
 
     const handleChange = (e) => { // : Event -> void
-        if (inputError) setInputError(false);
+
+        if (inputError && !(/a-Z/).test(inputParsed)){
+            setInputError(false)
+        }
+        // parse the input and save it to inputParsed
         setInputParsed(parseInput(e.target.value));
-        setTimeout(2)
-        // parseInput : String -> Number[]; 
-        //  Delimits the input string by commas and whitespace, then converts each element to a number.
     }
 
     const handleSubmit = (e) => { // : Event -> void
-            // submit the form
+    // submit the form
         if (e) e.preventDefault();
-        if (inputError) setInputError(false);
-            if (inputParsed === undefined) {
+
+        if (inputParsed === undefined) {
             setWarningText("The field is blank. Type something!");
             setInputError(true);
             return;
@@ -210,67 +182,64 @@ const App = () => {
 
         setShapes(shapeObjects);
         scrollDown();
-
     }
 
     const handleKeyDown = (e) => { // : Event -> void; 
-        // submit the form if shift+enter is pressed
+    // submit the form if shift+enter is pressed
         if (e.key === 'Enter' && e.shiftKey) {
             handleSubmit(e);
         }
     }
 
     const parseInput = (input) => { // : String -> Number[]
-            // Delimits the input string by commas and whitespace, then converts each element to a number.
+    // Delimits the textarea input string by commas and whitespace, then converts each element to a number.
+        if (typeof input != "string") {
+            return;
+        }
+
         let nums = [];
         const delimiters = /[,\s]+/; // delimit by comma or whitespace
-        const bannedDelimiters = /[^\d,\s]/; // delimit by anything that isn't a number, comma, or whitespace
+        const bannedCharacters = /[^\d,\s]/; // anything that isn't a number, comma, or whitespace
 
-        if (bannedDelimiters.test(input)) {
-            console.warn("Invalid input");
-            setWarningText("Invalid character")
+        if (bannedCharacters.test(input)) {
+            setWarningText("Invalid character");
             setInputError(true);
         }
 
-        // Clean types. 
-        if (typeof input === "string") {
-            nums = input.split(delimiters);
-        } else if (typeof input === "number") {
-            nums = input.toString().split(delimiters);
-        } else {
-            setWarningText("How did this happen!? This is why we use Typescript.");
-            setInputError(true);
-        }
+        nums = input.split(delimiters);
 
-        // filter out NAN before it happens.
+        // filter out whitespace and NaN.
         nums = nums.filter(n => !(/\s/).test(n)).map(n => parseInt(n));
         nums = nums.filter(n => !isNaN(n));
 
         return nums;
     }
 
-
-    // I've had this isPrime function from Medium in my macros for a while, hope that's okay.
-    // Pretty self explanatory, but I can go more in depth.
     const isPrime = (n) => {
+        if (n < 2 || n % 1 != 0) {
+        // checks if negative || 1 || 0 || decimal
+            return false;
+        }
         if (n === 2 || n === 3) {
+        // 2 and 3 are prime and common.
             return true;
         }
-        if (n < 2 || n % 1 != 0 || n % 2 === 0 || n % 3 === 0) {
+        if (n % 2 === 0 || n % 3 === 0) {
+        // checks if even or divisible by 3. This is lower for performance.
             return false;
         }
         for (let i = 5; i * i <= n; i += 6) {
+        // checks if divisible by 5 or 7, then 11 or 13, etc. All other numbers are covered by 2 and 3.
             if (n % i === 0 || n % (i + 2) === 0) {
                 return false;
             }
         }
-        return n > 1;
+        return true;
     }
 
     return (
         <div className="flex flex-col md:flex-row gap-4 md:gap-8 p-4 md:p-6 h-[100vh]">
-        <div className="flex-1 animate duration-700 justify-between flex border-2 border-slate-400 hover:border-white p-4 rounded-md relative">
-
+        <div id="INPUT_CONTAINER" className="flex-1 animate duration-700 transition-colors justify-between flex border-2 border-slate-400 hover:border-white p-4 mt-2 md:mt-0 rounded-md relative">
             <p className={`error fixed top-0 left-8 ${inputError ? '' : 'hidden'}`} id="input_error">{warningText}</p>
             <div className="flex flex-col relative w-full max-w-sm gap-1">
                 <h1 className="text-xl md:text-3xl font-bold">Display Shapes</h1>
@@ -281,7 +250,7 @@ const App = () => {
                         flex h-[100%] resize-none w-full rounded-md border
                         px-3 py-2 text-sm text-black
                         placeholder:text-muted-foreground 
-                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 
                         "
                         placeholder="Delimit by commas or whitespace.&#10;Shift+Enter to submit."
                         type="text" name="inputString"
@@ -306,19 +275,18 @@ const App = () => {
                     Auto-submit
                     </button>
                     <button 
-                    className={`m-2 w-[87px] text-xs text-nowrap p-2 select-none
-                    ${hideBlanks ? 'bg-green-400' : 'bg-gray-200 text-black'}
-                    `}
-                        onClick={handleHideBadNums}
+                        className={`m-2 w-[87px] text-xs text-nowrap p-2 select-none
+                        ${hideBlanks ? 'bg-green-400' : 'bg-gray-200 text-black'}
+                        `}
+                        onClick={handleHideBlanks}
                     >
                     Hide blanks
                     </button>
                 </div>
             </div>
         </div>
-        <div className="relative max-h-[100vh] flex-1 animate duration-700 border-2 border-slate-400 hover:border-white p-4 rounded-md overflow-auto">
+        <div id="SHAPE_CONTAINER" className="relative max-h-[100vh] flex-1 animate duration-700 border-2 border-slate-400 hover:border-white p-4 rounded-md overflow-auto">
             {shapes && shapes.map((shape, i) => {
-                // console.log(shape)
                 return (
                     <div key={i} className={`${hideBlanks && shape.display}`}>
                         <div className="flex flex-col gap-2" key={i}>
@@ -338,7 +306,15 @@ const App = () => {
         </div>
     )
 }
-ReactDOM.render(<App />, document.getElementById('root'));
+
+const { createRoot } = ReactDOM;
+const { StrictMode } = React;
+createRoot(document.getElementById('root')).render(
+    <StrictMode>
+    <App />
+    </StrictMode>
+)
+
 </script>
     </body>
 
