@@ -5,105 +5,142 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Elliott Mejia</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            :root {
-                background: black;
-                color: white;
-            }
 
-            .square, .rectangle,.circle {
-                width: 100px;
-                height: 100px;
-            }
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Elliott Mejia</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            background: black;
+            color: white;
+        }
 
-            .square { width: 100px; height: 100px; background-color: gray; }
-            .rectangle { width: 150px; height: 100px; background-color: gray; }
-            .triangle { width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 87px solid gray; }
-            .circle { width: 100px; height: 100px; background-color: gray; border-radius: 50%; }
-            .triangle.odd {
-                border-bottom: 87px solid red;
-            }
+        .square,
+        .rectangle,
+        .circle {
+            width: 100px;
+            height: 100px;
+        }
 
-            .triangle.even {
-                border-bottom: 87px solid green;
-            }
+        .square {
+            width: 100px;
+            height: 100px;
+            background-color: gray;
+        }
 
-            .circle {
-                background-color: gray;
-                border-radius: 50%;
-            }
+        .rectangle {
+            width: 150px;
+            height: 100px;
+            background-color: gray;
+        }
 
-            .odd:not(.triangle){
-                background-color: red;
-            }
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 87px solid gray;
+        }
 
-            .even:not(.triangle) {
-                background-color: green;
-            }
+        .circle {
+            width: 100px;
+            height: 100px;
+            background-color: gray;
+            border-radius: 50%;
+        }
 
-            .error {
-                color: red;
-            }
-        </style>
-        <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
-        <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-        <style>
-            .material-symbols-outlined {
-              font-variation-settings:
-              'FILL' 0,
-              'wght' 400,
-              'GRAD' 0,
-              'opsz' 24
-            }
-        </style>
-    </head>
-    <body>
+        .triangle.odd {
+            border-bottom: 87px solid red;
+        }
 
+        .triangle.even {
+            border-bottom: 87px solid green;
+        }
 
-        <div id="root"></div>
+        .circle {
+            background-color: gray;
+            border-radius: 50%;
+        }
+
+        .odd:not(.triangle) {
+            background-color: red;
+        }
+
+        .even:not(.triangle) {
+            background-color: green;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+</head>
+
+<body>
+<div id="root"></div>
 <script type="text/babel">
-// Shape Display Logic:
-
-// ● Square: n % 2 === 0
-// ● Rectangle: n % 3 === 0 
-// ● Triangle: n < 10 && n % 2 != 0 
-// ● Circle: isPrime(n) 
-// ● Input & Output:If the output number is odd, the inside of the shape should be filled
-// with the color green. If it is even, display the background color as red. Background color of the shape should be gray if the number is greater than 50. If the number is greater than 50, gray background should take priority over background based on even or odd.
-// The application should accept a series of numbers (at least 8 for testing purposes).
-// Each output (shape) must be displayed on a new line, preceded by the number of the question (e.g., "1. Triangle(the shape, not the word)" for the first number if it meets the triangle criteria).
-// Implement an interactive UI allowing users to input numbers and see the result in real-time.
-// Example Outputs: Input: 4 (divisible by 2)
-// Output: Square.
-// Color: No color filling (since 4 is even). Background: Default (4 is not greater than 50). Input: 9 (odd and less than 10)
-// Output: Triangle.
-// Color: Green filling (since 9 is odd). Background: Default (9 is not greater than 50). Input: 17 (prime number)
-// Output: Circle.
-// Color: Green filling (since 17 is odd). Background: Default (17 is not greater than 50). Input: 51 (greater than 50)
-// Output: Follows the shape logic based on divisibility. Color: If odd, fill with green.
-// Background: Light gray (since 51 is greater than 50).
-
-    // TODO: clean whitespace
-                                                            // TODO: gray above 50
 const App = () => {
     const [inputParsed, setInputParsed] = React.useState(); // : Number[]; Input text is parsed from the handleChange function.
     const [inputError, setInputError] = React.useState(false); // : Boolean; If true, the input text is invalid. Typing sets this to false.
     const [warningText, setWarningText] = React.useState("Error: Invalid Input"); // : String; Sets text to warn
     const [shapes, setShapes] = React.useState([]); // : Shape[]; Array of Shape objects to be displayed.
+    const [autoSubmit, setAutoSubmit] = React.useState(true); // : Boolean; If true, the form will submit automatically when the input text changes.
+    const [hideBlanks, setHideBlanks] = React.useState(false); // : Boolean; If true, the form will hide numbers that don't correspond to a shape.
+
+
+
+    const handleAutoSubmit = () => {
+        if (!autoSubmit){
+            handleSubmit();
+            scrollDown();
+
+        }
+        setAutoSubmit(!autoSubmit);
+    }
+    const handleHideBadNums = () => {
+        setHideBlanks(!hideBlanks);
+        if (inputParsed.length) handleSubmit();
+    }
+
+    React.useEffect(() => {
+        // This useEffect will be triggered whenever inputParsed changes.
+        if (inputParsed === undefined) {
+            return;
+        }
+
+        if (autoSubmit) handleSubmit();
+
+       scrollDown();
+
+    }, [inputParsed]);
+
+    const shapeContainerBot = React.useRef(null);
+
+    const scrollDown = () => {
+        setTimeout(() => {
+            shapeContainerBot.current.scrollIntoView({ behavior: 'smooth', block: 'end' }), 200
+        })
+    }
 
     class Shape {
-        name = "";
-        color = "";
-        display = false;
         constructor (number) {
             this.number = number;
             this.name = findShape(number);
@@ -113,17 +150,11 @@ const App = () => {
             this.color = this.applyColor(number);
         }
 
-        setName(name) { // : String -> void
-            this.name = name;
-        }
-
-
         applyColor(number) { // : Number -> String;
             // gray takes priority over 50.
             if (number > 50) {
                 return "gray"
             }
-
             if (number % 2 === 0) {
                 return "even"
             } else {
@@ -135,15 +166,16 @@ const App = () => {
     const handleChange = (e) => { // : Event -> void
         if (inputError) setInputError(false);
         setInputParsed(parseInput(e.target.value));
+        setTimeout(2)
         // parseInput : String -> Number[]; 
         //  Delimits the input string by commas and whitespace, then converts each element to a number.
     }
 
     const handleSubmit = (e) => { // : Event -> void
-    // submit the form
-        e.preventDefault();
+            // submit the form
+        if (e) e.preventDefault();
         if (inputError) setInputError(false);
-        if(inputParsed === undefined){
+            if (inputParsed === undefined) {
             setWarningText("The field is blank. Type something!");
             setInputError(true);
             return;
@@ -156,17 +188,18 @@ const App = () => {
         });
 
         setShapes(shapeObjects);
+
     }
 
     const handleKeyDown = (e) => { // : Event -> void; 
-    // submit the form if shift+enter is pressed
+        // submit the form if shift+enter is pressed
         if (e.key === 'Enter' && e.shiftKey) {
             handleSubmit(e);
         }
     }
 
     const parseInput = (input) => { // : String -> Number[]
-        // Delimits the input string by commas and whitespace, then converts each element to a number.
+            // Delimits the input string by commas and whitespace, then converts each element to a number.
         let nums = [];
         const delimiters = /[,\s]+/; // delimit by comma or whitespace
         const bannedDelimiters = /[^\d,\s]/; // delimit by anything that isn't a number, comma, or whitespace
@@ -175,9 +208,9 @@ const App = () => {
             console.warn("Invalid input");
             setWarningText("Invalid character")
             setInputError(true);
-        } 
+        }
 
-        // This is uneccessary with the current setup, but I generally like to be safe with typing.
+        // Clean types. 
         if (typeof input === "string") {
             nums = input.split(delimiters);
         } else if (typeof input === "number") {
@@ -189,24 +222,25 @@ const App = () => {
 
         // filter out NAN before it happens.
         nums = nums.filter(n => !(/\s/).test(n)).map(n => parseInt(n));
+        nums = nums.filter(n => !isNaN(n));
 
         return nums;
     }
 
     const findShape = (n) => { // : Number -> String; 
-    // Return the name of the shape the number corresponds to.
-        if (n < 10 && n % 2 != 0) { 
+                // Return the name of the shape the number corresponds to.
+        if (n < 10 && n % 2 != 0) {
             return "triangle";
             // console.log("triangle")
-        } else if(isPrime(n)){
+        } else if (isPrime(n)) {
             return "circle";
-            // console.log("circle")
-        } else if(n % 2 === 0){
+        // console.log("circle")
+        } else if (n % 2 === 0) {
             return "square"
-            // console.log("square")
-        } else if(n % 3 === 0){
+        // console.log("square")
+        } else if (n % 3 === 0) {
             return "rectangle"
-            // console.log("rectangle")
+        // console.log("rectangle")
         } else {
             return "none"
             // console.log(n + ` none`)
@@ -230,54 +264,82 @@ const App = () => {
         return n > 1;
     }
 
-    return(
+    return (
         <div className="flex flex-col md:flex-row gap-4 md:gap-8 p-4 md:p-6 h-[100vh]">
-            <div className="flex-1 animate duration-700 ustify-between flex border-2 border-slate-400 hover:border-white p-4 rounded-md overflow-scroll relative">
+        <div className="flex-1 animate duration-700 justify-between flex border-2 border-slate-400 hover:border-white p-4 rounded-md relative">
 
-                    <p className={`error fixed top-0 left-8 ${inputError ? '' : 'hidden'}`} id="input_error">{warningText}</p>
-                <div className="grid relative w-full max-w-sm items-center gap-1 5">
-                    <h1 className="text-3xl font-bold">Display Shapes</h1>
-                    <label className="text-lg font-bold "> Delimit by commas or whitespace. <br/>Shift + Enter to submit. 
-                        <textarea 
-                        className="flex h-[50vh] resize-none w-full rounded-md border
+            <p className={`error fixed top-0 left-8 ${inputError ? '' : 'hidden'}`} id="input_error">{warningText}</p>
+            <div className="flex flex-col relative w-full max-w-sm gap-1">
+                <h1 className="text-xl md:text-3xl font-bold">Display Shapes</h1>
+                <label className="text-xs md:text-lg font-bold h-[100%]">
+                    <textarea
+                        className="
+                        overflow-scroll
+                        flex h-[100%] resize-none w-full rounded-md border
                         px-3 py-2 text-sm text-black
                         placeholder:text-muted-foreground 
                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
                         "
-                        type="text" name="inputString" 
+                        placeholder="Delimit by commas or whitespace.&#10;Shift+Enter to submit."
+                        type="text" name="inputString"
                         onChange={handleChange}
                         onKeyDown={handleKeyDown}
-                         />   
-                        
-                    </label>
-                    {/* error message */}
-                </div>
-                <div className="sticky top-[50%] h-fit w-fit">
-                    <button className="material-symbols-outlined text-5xl rotate-90 w-100 relative bottom-0" type="submit" value="Submit" onClick={handleSubmit}>Publish</button>
-                </div>
+                    />
+                </label>
+                {/* error message */}
             </div>
-            <div className="flex-1 animate duration-700 border-2 border-slate-400 hover:border-white p-4 rounded-md overflow-scroll">
-                {shapes.length && shapes.map((shape, i) => {
-                    console.log(shape)
-                    return(
-                        <div key={i} className={shape.display}>
-                        <div className="flex flex-col gap-2" key={i}>
-                                <div className={`flex flex-col items-center justify-center`}>
-                                    <h3 className="text-2xl font-bold">{shape.number}</h3>
-                                    <div className={`${shape.name} ${shape.color}`}></div>
-                            </div>
-                        </div>
-                            <hr className="w-full m-4" />
+            <div className="sticky top-[50%] h-fit w-fit">
+                {/* submit button 
+                <button className="material-symbols-outlined text-5xl rotate-90 w-100 relative bottom-0" type="submit" value="Submit" onClick={handleSubmit}>Publish</button>
+                */}
+                    <div className="text-5xl rotate-90 w-100 relative bottom-0" onClick={handleSubmit}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24"><path fill="currentColor" d="M11 20v-8.15l-2.6 2.6L7 13l5-5l5 5l-1.4 1.45l-2.6-2.6V20zM4 9V6q0-.825.588-1.412T6 4h12q.825 0 1.413.588T20 6v3h-2V6H6v3z"/></svg>
                     </div>
-                    )
-                }
-                )}
-                
+
+                <div className="mt-4">
+                    <button 
+                    className={`ml-2 w-[87px] text-xs text-nowrap p-2 select-none
+                    ${autoSubmit ? 'bg-green-400' : 'bg-gray-200 text-black'}
+                    `}
+                        onClick={handleAutoSubmit}
+                    >
+                    Auto-submit
+                    </button>
+                    <button 
+                    className={`m-2 w-[87px] text-xs text-nowrap p-2 select-none
+                    ${hideBlanks ? 'bg-green-400' : 'bg-gray-200 text-black'}
+                    `}
+                        onClick={handleHideBadNums}
+                    >
+                    Hide blanks
+                    </button>
+                </div>
             </div>
         </div>
+        <div className="relative max-h-[100vh] flex-1 animate duration-700 border-2 border-slate-400 hover:border-white p-4 rounded-md overflow-auto">
+            {shapes && shapes.map((shape, i) => {
+                // console.log(shape)
+                return (
+                    <div key={i} className={`${hideBlanks && shape.display}`}>
+                        <div className="flex flex-col gap-2" key={i}>
+                            <div className={`flex flex-col items-center justify-center`}>
+                                <h3 className="text-2xl font-bold">{shape.number}</h3>
+                                <div className={`${shape.name} ${shape.color}`}></div>
+                            </div>
+                        </div>
+                        <hr className="w-full m-4" />
+                    </div>
+                )
+            }
+            )}
+            <div id="shapeContainerBot" ref={shapeContainerBot} className="relative -bottom-4"></div>
+            </div>
+
+        </div>
     )
-} 
+}
 ReactDOM.render(<App />, document.getElementById('root'));
 </script>
     </body>
+
 </html>
