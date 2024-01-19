@@ -17,23 +17,15 @@
                 color: white;
             }
 
-            .square, .rectangle, .triangle, .circle {
+            .square, .rectangle,.circle {
                 width: 100px;
                 height: 100px;
             }
 
-            .rectangle {
-                width: 150px;
-            }
-
-            .triangle {
-                width: 0;
-                height: 0;
-                border-left: 50px solid transparent;
-                border-right: 50px solid transparent;
-                border-bottom: 87px solid gray;
-            }
-
+            .square { width: 100px; height: 100px; background-color: gray; }
+            .rectangle { width: 150px; height: 100px; background-color: gray; }
+            .triangle { width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 87px solid gray; }
+            .circle { width: 100px; height: 100px; background-color: gray; border-radius: 50%; }
             .triangle.odd {
                 border-bottom: 87px solid red;
             }
@@ -47,11 +39,11 @@
                 border-radius: 50%;
             }
 
-            .odd {
+            .odd:not(.triangle){
                 background-color: red;
             }
 
-            .even {
+            .even:not(.triangle) {
                 background-color: green;
             }
 
@@ -101,6 +93,7 @@
 // Background: Light gray (since 51 is greater than 50).
 
     // TODO: clean whitespace
+                                                            // TODO: gray above 50
 const App = () => {
     const [inputParsed, setInputParsed] = React.useState(); // : Number[]; Input text is parsed from the handleChange function.
     const [inputError, setInputError] = React.useState(false); // : Boolean; If true, the input text is invalid. Typing sets this to false.
@@ -115,29 +108,26 @@ const App = () => {
             this.number = number;
             this.name = findShape(number);
             this.display = (this.name === "none")
-                ? this.display = false
-                : this.display = true;
+                ? this.display = "hidden"
+                : this.display = "block";
             this.color = this.applyColor(number);
-            this.div = <div className={`${this.name} ${this.color}`}></div>
         }
 
         setName(name) { // : String -> void
             this.name = name;
         }
 
-        setDiv(div) { // : String -> void 
-            this.div = div;
-        }
 
         applyColor(number) { // : Number -> String;
+            // gray takes priority over 50.
+            if (number > 50) {
+                return "gray"
+            }
+
             if (number % 2 === 0) {
                 return "even"
             } else {
                 return "odd"
-            }
-            // gray takes priority over 50.
-            if (number > 50) {
-                return "gray"
             }
         }
     }
@@ -154,18 +144,18 @@ const App = () => {
         e.preventDefault();
         if (inputError) setInputError(false);
         if(inputParsed === undefined){
-            setWarningText("Type something!");
+            setWarningText("The field is blank. Type something!");
             setInputError(true);
             return;
         }
 
-        let shapes = [];
+        let shapeObjects = [];
         inputParsed.forEach((n, i) => {
             let shape = new Shape(n); // init Shape with number
-            shapes.push(shape);
+            shapeObjects.push(shape);
         });
 
-        setShapes(shapes);
+        setShapes(shapeObjects);
     }
 
     const handleKeyDown = (e) => { // : Event -> void; 
@@ -270,11 +260,11 @@ const App = () => {
                 {shapes.length && shapes.map((shape, i) => {
                     console.log(shape)
                     return(
-                    <div key={i}>
+                        <div key={i} className={shape.display}>
                         <div className="flex flex-col gap-2" key={i}>
                                 <div className={`flex flex-col items-center justify-center`}>
                                     <h3 className="text-2xl font-bold">{shape.number}</h3>
-                                    {shape.div}
+                                    <div className={`${shape.name} ${shape.color}`}></div>
                             </div>
                         </div>
                             <hr className="w-full m-4" />
