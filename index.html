@@ -12,17 +12,52 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
-            :root{
+            :root {
                 background: black;
                 color: white;
             }
-            .square { width: 100px; height: 100px; background-color: gray; }
-            .rectangle { width: 150px; height: 100px; background-color: gray; }
-            .triangle { width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 87px solid gray; }
-            .circle { width: 100px; height: 100px; background-color: gray; border-radius: 50%; }
-            .odd { background-color: red; }
-            .even { background-color: green; }
-            .error {color: red;}
+
+            .square, .rectangle, .triangle, .circle {
+                width: 100px;
+                height: 100px;
+            }
+
+            .rectangle {
+                width: 150px;
+            }
+
+            .triangle {
+                width: 0;
+                height: 0;
+                border-left: 50px solid transparent;
+                border-right: 50px solid transparent;
+                border-bottom: 87px solid gray;
+            }
+
+            .triangle.odd {
+                border-bottom: 87px solid red;
+            }
+
+            .triangle.even {
+                border-bottom: 87px solid green;
+            }
+
+            .circle {
+                background-color: gray;
+                border-radius: 50%;
+            }
+
+            .odd {
+                background-color: red;
+            }
+
+            .even {
+                background-color: green;
+            }
+
+            .error {
+                color: red;
+            }
         </style>
         <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
         <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
@@ -65,14 +100,47 @@
 // Output: Follows the shape logic based on divisibility. Color: If odd, fill with green.
 // Background: Light gray (since 51 is greater than 50).
 
-
+    // TODO: clean whitespace
 const App = () => {
     const [inputParsed, setInputParsed] = React.useState(); // : Number[]; Input text is parsed from the handleChange function.
     const [inputError, setInputError] = React.useState(false); // : Boolean; If true, the input text is invalid. Typing sets this to false.
     const [warningText, setWarningText] = React.useState("Error: Invalid Input"); // : String; Sets text to warn
-    const [shapes, setShapes] = React.useState({}); // : Shape[]; Array of Shape objects to be displayed.
+    const [shapes, setShapes] = React.useState([]); // : Shape[]; Array of Shape objects to be displayed.
 
+    class Shape {
+        name = "";
+        color = "";
+        display = false;
+        constructor (number) {
+            this.number = number;
+            this.name = findShape(number);
+            this.display = (this.name === "none")
+                ? this.display = false
+                : this.display = true;
+            this.color = this.applyColor(number);
+            this.div = <div className={`${this.name} ${this.color}`}></div>
+        }
 
+        setName(name) { // : String -> void
+            this.name = name;
+        }
+
+        setDiv(div) { // : String -> void 
+            this.div = div;
+        }
+
+        applyColor(number) { // : Number -> String;
+            if (number % 2 === 0) {
+                return "even"
+            } else {
+                return "odd"
+            }
+            // gray takes priority over 50.
+            if (number > 50) {
+                return "gray"
+            }
+        }
+    }
 
     const handleChange = (e) => { // : Event -> void
         if (inputError) setInputError(false);
@@ -81,7 +149,8 @@ const App = () => {
         //  Delimits the input string by commas and whitespace, then converts each element to a number.
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e) => { // : Event -> void
+    // submit the form
         e.preventDefault();
         if (inputError) setInputError(false);
         if(inputParsed === undefined){
@@ -89,18 +158,25 @@ const App = () => {
             setInputError(true);
             return;
         }
-        for(let n of inputParsed) {
-            logShape(n);
-        }
-        displayShapes(inputParsed);
+
+        let shapes = [];
+        inputParsed.forEach((n, i) => {
+            let shape = new Shape(n); // init Shape with number
+            shapes.push(shape);
+        });
+
+        setShapes(shapes);
     }
-    const handleKeyDown = (e) => { // : Event -> void; submit the form if shift+enter is pressed
+
+    const handleKeyDown = (e) => { // : Event -> void; 
+    // submit the form if shift+enter is pressed
         if (e.key === 'Enter' && e.shiftKey) {
             handleSubmit(e);
         }
     }
 
     const parseInput = (input) => { // : String -> Number[]
+        // Delimits the input string by commas and whitespace, then converts each element to a number.
         let nums = [];
         const delimiters = /[,\s]+/; // delimit by comma or whitespace
         const bannedDelimiters = /[^\d,\s]/; // delimit by anything that isn't a number, comma, or whitespace
@@ -127,81 +203,26 @@ const App = () => {
         return nums;
     }
 
-    const logShape = (n) => {
+    const findShape = (n) => { // : Number -> String; 
+    // Return the name of the shape the number corresponds to.
         if (n < 10 && n % 2 != 0) { 
-            console.log("triangle")
+            return "triangle";
+            // console.log("triangle")
         } else if(isPrime(n)){
-            console.log("circle")
+            return "circle";
+            // console.log("circle")
         } else if(n % 2 === 0){
-            console.log("square")
+            return "square"
+            // console.log("square")
         } else if(n % 3 === 0){
-            console.log("rectangle")
+            return "rectangle"
+            // console.log("rectangle")
         } else {
-            console.log("none")
+            return "none"
+            // console.log(n + ` none`)
         }
     }
-    // here for reference. Not valid in the base flavor of JS, obviously.
-    // interface Shape {
-    //     name: string;
-    //     shape: JSX.Element;
-    //     color: string;
-    //     background: string;
-    //     size: string;
-    // }
 
-    const displayShapes = (numbers) => { // Number[] -> void
-        let shapes = [];
-        numbers.forEach((n, i) => {
-            let shape = {};
-            if (n < 10 && n % 2 != 0) {
-                shape = {
-                    name: "triangle",
-                    shape: <div className="triangle"></div>,
-                    color: "odd",
-                    size: "default"
-                }
-            } else if(isPrime(n)){
-                shape = {
-                    name: "circle",
-                    shape: <div className="circle"></div>,
-                    color: "odd",
-                    size: "default"
-                }
-            } else if(n % 2 === 0){
-                shape = {
-                    name: "square",
-                    shape: <div className="square"></div>,
-                    color: "default",
-                    background: "default",
-                    size: "default"
-                }
-            } else if(n % 3 === 0){
-                shape = {
-                    name: "rectangle",
-                    shape: <div className="rectangle"></div>,
-                    color: "default",
-                    size: "default"
-                }
-            } else {
-                shape = {
-                    name: "None",
-                    shape: <div className="none">ERROR</div>,
-                    color: "default",
-                    size: "default"
-                }
-            }
-            if(n % 2 === 0){
-                shape.color = "even";
-            }
-            if(n > 50){
-                shape.color = "gray";
-            }
-            shape.origin = n;
-            shape.div = <div className={`${shape.name} ${shape.color}`}></div> 
-            shapes.push(shape);
-        });
-        setShapes(shapes);
-    }
     // I've had this isPrime function from Medium in my macros for a while, hope that's okay.
     // Pretty self explanatory, but I can go more in depth.
     const isPrime = (n) => {
@@ -216,12 +237,12 @@ const App = () => {
                 return false;
             }
         }
-        return true;
+        return n > 1;
     }
 
     return(
         <div className="flex flex-col md:flex-row gap-4 md:gap-8 p-4 md:p-6 h-[100vh]">
-            <div className="flex-1 justify-between flex border-2 border-slate-400 hover:border-white p-4 rounded-md overflow-scroll relative">
+            <div className="flex-1 animate duration-700 ustify-between flex border-2 border-slate-400 hover:border-white p-4 rounded-md overflow-scroll relative">
 
                     <p className={`error fixed top-0 left-8 ${inputError ? '' : 'hidden'}`} id="input_error">{warningText}</p>
                 <div className="grid relative w-full max-w-sm items-center gap-1 5">
@@ -245,16 +266,18 @@ const App = () => {
                     <button className="material-symbols-outlined text-5xl rotate-90 w-100 relative bottom-0" type="submit" value="Submit" onClick={handleSubmit}>Publish</button>
                 </div>
             </div>
-            <div className="flex-1 border-2 border-slate-400 hover:border-white p-4 rounded-md overflow-scroll">
+            <div className="flex-1 animate duration-700 border-2 border-slate-400 hover:border-white p-4 rounded-md overflow-scroll">
                 {shapes.length && shapes.map((shape, i) => {
+                    console.log(shape)
                     return(
                     <div key={i}>
                         <div className="flex flex-col gap-2" key={i}>
-                            <div className={`flex flex-col items-center justify-center ${shape.color} ${shape.background} ${shape.size}`}>
-                                <h3 className="text-2xl font-bold">{i+1} {shape.name}</h3>
-                                {shape.shape}
+                                <div className={`flex flex-col items-center justify-center`}>
+                                    <h3 className="text-2xl font-bold">{shape.number}</h3>
+                                    {shape.div}
                             </div>
                         </div>
+                            <hr className="w-full m-4" />
                     </div>
                     )
                 }
