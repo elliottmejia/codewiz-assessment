@@ -19,6 +19,9 @@
             background: #000000;
             color: white;
             --shape-height: 100px;
+            --green: #07c262;
+            --red: #d21e15;
+            --gray: #808080;
         }
         .square,
         .circle {
@@ -26,38 +29,38 @@
             height: var(--shape-height);
         }
         .square {
-            background-color: gray;
+            background-color: var(--gray);
         }
         .rectangle {
             width: 150px;
             height: var(--shape-height);
-            background-color: gray;
+            background-color: var(--gray);
         }
         .triangle {
             width: 0;
             height: 0;
             border-left: 50px solid transparent;
             border-right: 50px solid transparent;
-            border-bottom: 87px solid gray;
+            border-bottom: 87px solid var(--gray);
         }
         .circle {
-            background-color: gray;
+            background-color: var(--gray);
             border-radius: 50%;
         }
         .triangle.odd {
-            border-bottom: 87px solid red;
+            border-bottom: 87px solid var(--green);
         }
         .triangle.even {
-            border-bottom: 87px solid green;
+            border-bottom: 87px solid var(--red);
         }
         .odd:not(.triangle) {
-            background-color: red;
+            background-color: var(--green);
         }
         .even:not(.triangle) {
-            background-color: green;
+            background-color: var(--red);
         }
         .error {
-            color: red;
+            color: var(--red);
         }
     </style>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -124,7 +127,7 @@ const App = () => {
         }
 
         applyColor(number) { // : Number -> String;
-            // gray takes priority over 50.
+            // gray takes priority when n < 50.
             if (number > 50) {
                 return "gray"
             }
@@ -262,27 +265,30 @@ const App = () => {
                 {/* error message */}
             </div>
             <div className="sticky top-[50%] h-fit w-fit">
-                    <div className="text-5xl rotate-90 relative bottom-0 w-fit" onClick={handleSubmit}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24"><path fill="currentColor" d="M11 20v-8.15l-2.6 2.6L7 13l5-5l5 5l-1.4 1.45l-2.6-2.6V20zM4 9V6q0-.825.588-1.412T6 4h12q.825 0 1.413.588T20 6v3h-2V6H6v3z"/></svg>
-                    </div>
 
                 <div className="mt-4">
                     <button 
-                    className={`ml-2 w-[87px] text-xs text-nowrap p-2 select-none
-                    ${autoSubmit ? 'bg-green-400' : 'bg-gray-200 text-black'}
-                    `}
+                        className={`ml-2 w-[87px] text-xs text-nowrap p-2 select-none 
+                        ${autoSubmit ? 'odd' : 'bg-gray-200 text-black'}
+                        `}
                         onClick={handleAutoSubmit}
                     >
                     Auto-submit
                     </button>
                     <button 
-                        className={`m-2 w-[87px] text-xs text-nowrap p-2 select-none
+                        className={`m-2 w-[87px] text-xs text-nowrap p-2 select-none 
                         ${hideBlanks ? 'bg-green-400' : 'bg-gray-200 text-black'}
                         `}
                         onClick={handleHideBlanks}
                     >
                     Hide blanks
                     </button>
+
+                {!autoSubmit && (
+                    <div className="text-5xl rotate-90 relative left-[52px] w-fit" onClick={handleSubmit}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24"><path fill="currentColor" d="M11 20v-8.15l-2.6 2.6L7 13l5-5l5 5l-1.4 1.45l-2.6-2.6V20zM4 9V6q0-.825.588-1.412T6 4h12q.825 0 1.413.588T20 6v3h-2V6H6v3z"/></svg>
+                    </div>
+                )}
                 </div>
             </div>
         </div>
@@ -314,7 +320,7 @@ const { createRoot } = ReactDOM;
 const { StrictMode } = React;
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-    <App />
+        <App />
     </StrictMode>
 )
 
